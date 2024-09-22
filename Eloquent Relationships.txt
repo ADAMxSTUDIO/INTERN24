@@ -1,0 +1,22 @@
+Recap des relations Eloquent
+Role :
+
+hasMany(User::class) : Un rôle peut avoir plusieurs utilisateurs.
+User :
+
+belongsTo(Role::class) : Un utilisateur appartient à un rôle.
+hasMany(LeaveRequest::class) : Un utilisateur peut soumettre plusieurs demandes de congés.
+hasMany(Notification::class) : Un utilisateur peut recevoir plusieurs notifications.
+hasMany(LeaveReport::class) : Un utilisateur peut avoir plusieurs rapports de congés.
+hasMany(LeaveRequest::class, 'manager_id') : Un utilisateur (manager) peut gérer plusieurs demandes de congés.
+LeaveRequest :
+
+belongsTo(User::class) : Une demande de congé appartient à un utilisateur (employé).
+belongsTo(User::class, 'manager_id') : Une demande de congé est traitée par un manager.
+Notification :
+
+belongsTo(User::class) : Une notification appartient à un utilisateur.
+LeaveReport :
+
+belongsTo(User::class) : Un rapport de congé appartient à un utilisateur.
+Ces modèles et relations Eloquent permettent de structurer votre application de manière efficace, facilitant la récupération des données associées aux utilisateurs, demandes de congé, notifications et rapports.

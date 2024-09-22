@@ -6,10 +6,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     /**
@@ -43,5 +45,34 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    // Un utilisateur appartient à un rôle
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    // Un utilisateur peut soumettre plusieurs demandes de congés
+    public function leaveRequests()
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+
+    // Un utilisateur peut recevoir plusieurs notifications
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    // Un utilisateur peut avoir plusieurs rapports de congés
+    public function leaveReports()
+    {
+        return $this->hasMany(LeaveReport::class);
+    }
+
+    // Un utilisateur peut gérer plusieurs demandes de congés s'il est manager
+    public function managedLeaveRequests()
+    {
+        return $this->hasMany(LeaveRequest::class, 'manager_id');
     }
 }

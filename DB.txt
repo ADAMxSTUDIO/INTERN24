@@ -1,0 +1,77 @@
+La base de données pour cette application Laravel de gestion des demandes de congés est structurée avec plusieurs tables interconnectées qui gèrent les utilisateurs, les rôles, les demandes de congés, les notifications, et les rapports de congés.
+
+### Structure des tables
+
+1. **Table `roles`** :
+   - Contient les différents rôles d'utilisateur (employé, manager, administrateur).
+   - Elle permet de définir les autorisations et responsabilités des utilisateurs.
+   - **Colonnes** :
+     - `id` : Clé primaire, identifiant unique du rôle.
+     - `name` : Nom du rôle (ex. : 'employee', 'manager', 'admin').
+     - `timestamps` : Horodatage pour suivre la création et mise à jour des rôles.
+
+2. **Table `users`** :
+   - Stocke les informations des utilisateurs (employés, managers, administrateurs).
+   - Chaque utilisateur est associé à un rôle via une clé étrangère.
+   - **Colonnes** :
+     - `id` : Clé primaire, identifiant unique de l'utilisateur.
+     - `name` : Nom de l'utilisateur.
+     - `email` : Adresse email unique.
+     - `password` : Mot de passe haché pour la sécurité.
+     - `role_id` : Référence à la table `roles` pour spécifier le rôle de l'utilisateur.
+     - `timestamps` : Horodatage pour suivre la création et mise à jour des utilisateurs.
+     - `remember_token` : Jeton pour la gestion de sessions.
+   
+3. **Table `leave_requests`** :
+   - Gère les demandes de congés des employés.
+   - Chaque demande est liée à un employé via une clé étrangère et à un manager qui peut approuver ou rejeter la demande.
+   - **Colonnes** :
+     - `id` : Clé primaire, identifiant unique de la demande.
+     - `user_id` : Référence à la table `users` pour identifier l'employé ayant soumis la demande.
+     - `type` : Type de congé demandé (ex. : vacances, maladie).
+     - `start_date` : Date de début du congé.
+     - `end_date` : Date de fin du congé.
+     - `reason` : Motif du congé (facultatif).
+     - `status` : Statut de la demande ('pending', 'approved', 'rejected').
+     - `comments` : Commentaires du manager concernant la demande (facultatif).
+     - `manager_id` : Référence à la table `users` pour identifier le manager qui traite la demande.
+     - `timestamps` : Horodatage pour suivre la création et mise à jour des demandes.
+   
+4. **Table `notifications`** :
+   - Gère les notifications envoyées aux utilisateurs pour les informer des changements de statut ou autres événements importants.
+   - **Colonnes** :
+     - `id` : Clé primaire, identifiant unique de la notification.
+     - `user_id` : Référence à la table `users` pour identifier l'utilisateur qui reçoit la notification.
+     - `message` : Contenu de la notification.
+     - `is_read` : Indique si la notification a été lue (booléen).
+     - `timestamps` : Horodatage pour suivre la création et mise à jour des notifications.
+
+5. **Table `leave_reports`** :
+   - Stocke les rapports sur les congés pour chaque employé sur une période donnée.
+   - **Colonnes** :
+     - `id` : Clé primaire, identifiant unique du rapport.
+     - `user_id` : Référence à la table `users` pour l'employé concerné.
+     - `total_days_taken` : Nombre total de jours de congés pris par l'employé.
+     - `remaining_days` : Nombre de jours de congés restant pour l'employé.
+     - `report_start_date` : Date de début de la période de rapport.
+     - `report_end_date` : Date de fin de la période de rapport.
+     - `timestamps` : Horodatage pour suivre la création et mise à jour des rapports.
+
+### Relations entre les tables
+
+- **Relation entre `users` et `roles`** : 
+  - Un utilisateur a un rôle. Il est lié à la table `roles` par une clé étrangère (`role_id`).
+  
+- **Relation entre `users` et `leave_requests`** : 
+  - Un utilisateur peut soumettre plusieurs demandes de congés. Chaque demande de congé est liée à un utilisateur par la clé étrangère `user_id`.
+  - Un manager peut traiter plusieurs demandes de congés via la clé étrangère `manager_id`.
+
+- **Relation entre `users` et `notifications`** : 
+  - Un utilisateur peut recevoir plusieurs notifications. Chaque notification est liée à un utilisateur via la clé étrangère `user_id`.
+
+- **Relation entre `users` et `leave_reports`** : 
+  - Chaque rapport de congés est lié à un utilisateur par la clé étrangère `user_id`.
+
+### Modèle logique
+
+L'organisation de cette base de données suit un modèle relationnel avec une architecture normalisée, où chaque table est responsable de la gestion d'une entité spécifique (utilisateurs, rôles, demandes, notifications, rapports). Les relations entre ces entités permettent de structurer et de récupérer les données efficacement pour gérer les différentes fonctionnalités de l'application.

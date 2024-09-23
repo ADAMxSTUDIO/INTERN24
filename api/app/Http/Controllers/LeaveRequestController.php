@@ -46,21 +46,14 @@ class LeaveRequestController extends Controller
             'comments' => 'nullable|string',
         ]);
 
-        // Vérifier si l'utilisateur est un responsable
-        if (Auth::user()->role !== 'manager') {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-
         // Mettre à jour la demande de congé
         $leaveRequest->update([
             'status' => $request->status,
             'comments' => $request->comments,
         ]);
 
-        // Si la demande est approuvée, envoyer une notification par email
-        if ($request->status === 'approved') {
-            $leaveRequest->user->notify(new LeaveRequestApproved($leaveRequest));
-        }
+        // envoyer une notification par email
+        $leaveRequest->user->notify(new LeaveRequestApproved($leaveRequest));
 
         return response()->json($leaveRequest);
     }

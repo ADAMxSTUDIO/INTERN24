@@ -18,7 +18,6 @@ class ReportFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(), // Crée un utilisateur associé
             'file_path' => $this->faker->filePath(), // Chemin fictif pour le rapport
         ];
     }

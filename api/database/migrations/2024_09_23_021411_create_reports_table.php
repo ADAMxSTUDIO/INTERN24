@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('file_path'); // Chemin vers le fichier PDF ou Excel
             $table->timestamps();
         });

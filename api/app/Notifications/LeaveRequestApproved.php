@@ -27,7 +27,7 @@ class LeaveRequestApproved extends Notification
     {
         return (new MailMessage)
             ->greeting('Bonjour ' . $notifiable->name)
-            ->line('Votre demande de congé a été approuvée.')
+            ->line('Votre demande de congé a été examiné et la décision finale par le département RH est: ' . $this->leaveRequest->status)
             ->line('Détails de la demande :')
             ->line('Type de congé : ' . $this->leaveRequest->type)
             ->line('Dates : ' . $this->leaveRequest->start_date . ' à ' . $this->leaveRequest->end_date)

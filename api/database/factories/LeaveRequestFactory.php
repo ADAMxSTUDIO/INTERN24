@@ -5,21 +5,25 @@ namespace Database\Factories;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LeaveRequest>
+ */
 class LeaveRequestFactory extends Factory
 {
-    public function definition()
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
     {
         return [
-            'user_id' => User::factory(), // Génère un utilisateur
-            'type' => $this->faker->randomElement(['vacation', 'sick leave', 'personal leave']),
-            'start_date' => $this->faker->dateTimeBetween('now', '+1 month'),
-            'end_date' => $this->faker->dateTimeBetween('+1 month', '+2 months'),
-            'reason' => $this->faker->sentence(),
+            'user_id' => User::factory(), // Crée un utilisateur associé
+            'type' => $this->faker->randomElement(['annual', 'sick', 'maternity', 'paternity', 'other']),
+            'start_date' => $this->faker->date(),
+            'end_date' => $this->faker->date(),
             'status' => $this->faker->randomElement(['pending', 'approved', 'rejected']),
-            'comments' => $this->faker->optional()->sentence(),
-            'manager_id' => User::factory()->state(['role_id' => 2]), // Génère un manager avec role_id = 2
+            'comments' => $this->faker->optional()->text(),
         ];
     }
 }
-
-

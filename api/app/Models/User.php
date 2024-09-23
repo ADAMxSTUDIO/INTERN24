@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id',
+        'role'
     ];
 
     /**
@@ -35,44 +35,22 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-    // Un utilisateur appartient à un rôle
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
-    // Un utilisateur peut soumettre plusieurs demandes de congés
     public function leaveRequests()
     {
         return $this->hasMany(LeaveRequest::class);
     }
 
-    // Un utilisateur peut recevoir plusieurs notifications
-    public function notifications()
+    public function reports()
     {
-        return $this->hasMany(Notification::class);
-    }
-
-    // Un utilisateur peut avoir plusieurs rapports de congés
-    public function leaveReports()
-    {
-        return $this->hasMany(LeaveReport::class);
-    }
-
-    // Un utilisateur peut gérer plusieurs demandes de congés s'il est manager
-    public function managedLeaveRequests()
-    {
-        return $this->hasMany(LeaveRequest::class, 'manager_id');
+        return $this->hasMany(Report::class);
     }
 }
